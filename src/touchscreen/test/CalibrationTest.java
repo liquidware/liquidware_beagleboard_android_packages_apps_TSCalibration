@@ -121,9 +121,6 @@ public class CalibrationTest extends Activity {
 
     /*
      * Override onKeyUp to handle button presses
-     *
-     * (non-Javadoc)
-     * @see android.app.Activity#onKeyUp(int, android.view.KeyEvent)
      */
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent msg) {
@@ -227,20 +224,16 @@ public class CalibrationTest extends Activity {
 
     /*
      * Catch and handle Touch events from the device
-     *
-     * (non-Javadoc)
-     * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
      */
     @Override public boolean onTouchEvent(MotionEvent event) {
-        if (STEP != STEP_0){
-            //Retrieve Data from Event
-            mResultPts[(STEP -1) * mPtsLength] = event.getRawX();
-            mResultPts[(STEP -1) * mPtsLength + 1] = event.getRawY();
+        final int eventAction = event.getAction();
 
-            final int eventAction = event.getAction();
-            if (eventAction == MotionEvent.ACTION_UP){
-            }
-            else if (eventAction == MotionEvent.ACTION_DOWN){
+        if (eventAction == MotionEvent.ACTION_UP){
+            if (STEP != STEP_0){
+            //Retrieve Data from Event
+                mResultPts[(STEP -1) * mPtsLength] = event.getRawX();
+                mResultPts[(STEP -1) * mPtsLength + 1] = event.getRawY();
+
                 switch(STEP){
                 case STEP_0:
                     STEP = STEP_1;
@@ -271,7 +264,6 @@ public class CalibrationTest extends Activity {
                 if((STEP == STEP_3 || STEP == STEP_5) && QUIT) {
                     super.setContentView(R.layout.exit);
 
-                    //Attempt to use the Native function through JNI
                     int[] params = new int[20];
                     for (int i =0; i < (params.length / 2); i+=2){
                         params[i] = (int)mResultPts[i]; //x
@@ -291,6 +283,14 @@ public class CalibrationTest extends Activity {
 
                     try{
                         fos = this.openFileOutput("pointercal", MODE_WORLD_READABLE);
+                        String rawValues = new String();
+
+                        for (int i =0; i < params.length; i++){
+                            rawValues += Integer.toString(params[i]);
+                            rawValues += " ";
+                        }
+
+                        fos.write(rawValues.getBytes());
                     }
                     catch (Exception e){
                         Log.e(TAG, "Exception Occured: Trying to change to World Readable: " +
@@ -298,8 +298,6 @@ public class CalibrationTest extends Activity {
                         Log.e(TAG, "Finishing the Application");
                         super.finish();
                     }
-
-                    calibrateAndroid(params);
 
                     char[] pointercalBuffer = new char[100];
                     String pointercalValues = "";
