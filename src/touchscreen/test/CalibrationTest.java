@@ -144,7 +144,7 @@ public class CalibrationTest extends Activity {
     boolean doKeyUp(int keyCode, KeyEvent msg) {
         boolean handled = false;
 
-        if ((keyCode == KeyEvent.KEYCODE_5 || keyCode == KeyEvent.KEYCODE_SOFT_LEFT)
+        if ((keyCode == KeyEvent.KEYCODE_5 || keyCode == KeyEvent.KEYCODE_DPAD_CENTER)
             && STEP == STEP_0){
             STEP = STEP_1;
 
