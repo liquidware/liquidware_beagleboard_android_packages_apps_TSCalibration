@@ -126,18 +126,8 @@ public class CalibrationTest extends Activity {
     public boolean onKeyUp(int keyCode, KeyEvent msg) {
         boolean result = doKeyUp(keyCode, msg);
 
-        if (QUIT && keyCode == KeyEvent.KEYCODE_9){
-            // Close and Save File
-            if (fos != null){
-                try{fos.close();}catch(Exception e){
-                    Log.d("TAG", "Exception Occured While Trying to Close and Save "
-                            + e.toString());
-                };
-            }
-
-            this.finish();
-            super.finish();
-        }
+        if (QUIT && keyCode == KeyEvent.KEYCODE_9)
+            close();
         return result;
     }
 
@@ -160,6 +150,8 @@ public class CalibrationTest extends Activity {
                 defaultPointercal = defaultPointercalValues.getBytes();
                 fos = this.openFileOutput("pointercal", MODE_WORLD_READABLE);
                 fos.write(defaultPointercal);
+                fos.flush();
+                fos.getFD().sync();
             }catch (Exception e){
                 Log.e(TAG, "Exception Occured: Trying to default pointercal: " +
                         e.toString());
@@ -229,7 +221,12 @@ public class CalibrationTest extends Activity {
         final int eventAction = event.getAction();
 
         if (eventAction == MotionEvent.ACTION_UP){
-            if (STEP != STEP_0){
+            if (STEP == STEP_0) {
+                STEP = STEP_1;
+                super.setContentView(new CalibrationView(this));
+            } else if (QUIT) {
+                close();
+            } else {
             //Retrieve Data from Event
                 mResultPts[(STEP -1) * mPtsLength] = event.getRawX();
                 mResultPts[(STEP -1) * mPtsLength + 1] = event.getRawY();
@@ -291,6 +288,8 @@ public class CalibrationTest extends Activity {
                         }
 
                         fos.write(rawValues.getBytes());
+                        fos.flush();
+                        fos.getFD().sync();
                     }
                     catch (Exception e){
                         Log.e(TAG, "Exception Occured: Trying to change to World Readable: " +
@@ -330,6 +329,18 @@ public class CalibrationTest extends Activity {
     private void checkQuit(){
         if(QUIT)
             super.finish();
+    }
+
+    private void close() {
+        // Close and Save File
+        if (fos != null){
+            try{fos.close();}catch(Exception e){
+                Log.d("TAG", "Exception Occured While Trying to Close and Save "
+                      + e.toString());
+            };
+        }
+        this.finish();
+        super.finish();
     }
 
     /*
