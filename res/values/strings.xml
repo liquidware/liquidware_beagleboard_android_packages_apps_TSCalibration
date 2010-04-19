@@ -29,9 +29,9 @@
 <resources>
     <string name="hello">Hello World, testcal</string>
     <string name="app_name">testcal</string>
-    <string name="intro">Touch Screen Calibration:'\n' Please follow the steps carefully.</string>
+    <string name="intro">Touch Screen Calibration:\n Please follow the steps carefully.</string>
     <string name="instruc">Tap On Red Circle #</string>
     <string name="cont">Touch the screen or press 5 or dpad center to continue.</string>
-    <string name="complete">Calibration is Complete.'\n'(Reboot Device for New Settings)</string>
+    <string name="complete">Calibration is Complete.\n(Reboot Device for New Settings)</string>
     <string name="quit">Touch the screen or press 9 to quit.</string>
 </resources>
