@@ -286,6 +286,9 @@ public class CalibrationTest extends Activity {
                             rawValues += Integer.toString(params[i]);
                             rawValues += " ";
                         }
+                        
+                        //hacked in until this program is fixed 
+                        rawValues = "8507 235 -2270516 -37 -4937 18921206 65536";
 
                         fos.write(rawValues.getBytes());
                         fos.flush();
